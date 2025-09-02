@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<title>Dashboard - ZTR COMPANY</title>
+<link rel="stylesheet" href="style.css">
+<script defer src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
+<script defer src="dashboard.js"></script>
+</head>
+<body>
+<header>
+  <h1>Bem-vindo, <span id="userDisplay"></span></h1>
+  <button id="logoutBtn">Sair</button>
+</header>
+
+<main>
+  <section>
+    <h2>Pastas de Planilhas</h2>
+    <div id="folders" class="folder-container"></div>
+    <button id="addFolderBtn">+ Nova Pasta</button>
+    <button id="removeFolderBtn">- Remover Pasta</button>
+  </section>
+
+  <section>
+    <h2 id="planilhaTitle">Planilha</h2>
+    <div id="tableTools">
+      <button id="addRowBtn">+ Linha</button>
+      <button id="removeRowBtn">- Linha</button>
+      <button id="addColBtn">+ Coluna</button>
+      <button id="removeColBtn">- Coluna</button>
+      <button id="exportBtn">Exportar Excel</button>
+      <input type="file" id="importFile" accept=".xlsx,.xls" style="display:none;">
+      <label for="importFile" class="import-btn">Importar Excel</label>
+      <button id="saveBtn">Salvar</button>
+    </div>
+    <div id="tableContainer"></div>
+  </section>
+</main>
+</body>
+</html>

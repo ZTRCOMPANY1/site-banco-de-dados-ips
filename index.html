@@ -1,0 +1,25 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<title>Login</title>
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+<div class="login-box">
+  <h2>Login</h2>
+  <input type="text" id="userInput" placeholder="Digite seu nome">
+  <button id="loginBtn">Entrar</button>
+</div>
+
+<script>
+document.getElementById("loginBtn").addEventListener("click", ()=>{
+  const user = document.getElementById("userInput").value.trim();
+  if(user){
+    localStorage.setItem("user", user);
+    window.location.href = "dashboard.html";
+  } else alert("Digite um nome!");
+});
+</script>
+</body>
+</html>

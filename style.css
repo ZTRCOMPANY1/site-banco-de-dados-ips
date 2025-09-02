@@ -1,0 +1,8 @@
+body { font-family: Arial; margin:0; padding:0; }
+header { background:#3498db; color:white; padding:10px; display:flex; justify-content:space-between; align-items:center; }
+button { margin:2px; padding:5px 10px; cursor:pointer; }
+.folder-container { display:flex; flex-wrap:wrap; margin:10px 0; }
+.folder { background:#eee; padding:5px 10px; margin:3px; cursor:pointer; border-radius:5px; }
+#importFile + .import-btn { background:#2ecc71; color:white; padding:5px 10px; border-radius:5px; cursor:pointer; }
+table th, table td { border:1px solid #ccc; min-width:120px; padding:6px; text-align:left; }
+#tableContainer { overflow:auto; max-height:400px; margin-top:10px; }
