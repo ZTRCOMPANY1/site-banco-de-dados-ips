@@ -11,17 +11,7 @@ const planilhaTitle = document.getElementById("planilhaTitle");
 let pastas = {};
 let pastaAtual = null;
 
-// CARREGAR PASTAS EXISTENTES DO SERVIDOR
-fetch("listarPastas.php")
-.then(res => res.json())
-.then(pastasServidor=>{
-    pastasServidor.forEach(nome=>{
-        pastas[nome] = null;
-        criarDivPasta(nome);
-    });
-});
-
-// FUNÇÕES DE PASTA
+// FUNÇÃO PARA CRIAR A DIV DE CADA PASTA
 function criarDivPasta(nome){
   const div = document.createElement("div");
   div.className = "folder";
@@ -30,11 +20,12 @@ function criarDivPasta(nome){
   foldersContainer.appendChild(div);
 }
 
+// ABRIR PASTA
 function abrirPasta(nome){
   pastaAtual = nome;
   planilhaTitle.textContent = `Planilha: ${nome}`;
   
-  fetch(`bancos/${nome}.json`)
+  fetch(`bancos/${user}/${nome}.json`)
     .then(res => res.json())
     .then(dados => {
       pastas[pastaAtual] = {
@@ -50,6 +41,16 @@ function abrirPasta(nome){
     });
 }
 
+// LISTAR PASTAS EXISTENTES
+fetch(`listarPastas.php?usuario=${user}`)
+.then(res => res.json())
+.then(pastasServidor=>{
+    pastasServidor.forEach(nome=>{
+        pastas[nome] = null;
+        criarDivPasta(nome);
+    });
+});
+
 // BOTÕES DE PASTA
 document.getElementById("addFolderBtn").addEventListener("click", ()=>{
   const nome = prompt("Nome da pasta:");
@@ -57,18 +58,17 @@ document.getElementById("addFolderBtn").addEventListener("click", ()=>{
   pastas[nome] = { linhas:5, colunas:5, dados:Array.from({length:5},()=>Array(5).fill("")) };
   criarDivPasta(nome);
   abrirPasta(nome);
-  // SALVAR JSON VAZIO NO SERVIDOR
   fetch("salvar.php",{
     method:"POST",
     headers:{"Content-Type":"application/json"},
-    body:JSON.stringify({nome:nome,dados:pastas[nome].dados})
+    body:JSON.stringify({nome:nome,dados:pastas[nome].dados, usuario: user})
   });
 });
 
 document.getElementById("removeFolderBtn").addEventListener("click", ()=>{
   if(!pastaAtual) return;
   if(confirm(`Apagar pasta "${pastaAtual}"?`)){
-    fetch(`remover.php?nome=${pastaAtual}`).then(res=>res.text()).then(console.log);
+    fetch(`remover.php?nome=${pastaAtual}&usuario=${user}`).then(res=>res.text()).then(console.log);
     delete pastas[pastaAtual];
     foldersContainer.innerHTML = "";
     Object.keys(pastas).forEach(criarDivPasta);
@@ -77,7 +77,7 @@ document.getElementById("removeFolderBtn").addEventListener("click", ()=>{
   }
 });
 
-// RENDER TABELA
+// RENDERIZAR TABELA
 function renderTabela(){
   if(!pastaAtual) return;
   const pasta = pastas[pastaAtual];
@@ -152,11 +152,10 @@ document.getElementById("importFile").addEventListener("change", function(e){
     pasta.colunas = jsonData[0].length;
     pasta.dados = jsonData.map(r=>[...r]);
     renderTabela();
-    // SALVA AUTOMATICAMENTE
     fetch("salvar.php",{
       method:"POST",
       headers:{"Content-Type":"application/json"},
-      body:JSON.stringify({nome:pastaAtual,dados:pasta.dados})
+      body:JSON.stringify({nome:pastaAtual,dados:pasta.dados, usuario:user})
     }).then(res=>res.text()).then(console.log);
   };
   reader.readAsArrayBuffer(file);
@@ -168,7 +167,7 @@ document.getElementById("saveBtn").addEventListener("click", ()=>{
   fetch("salvar.php",{
     method:"POST",
     headers:{"Content-Type":"application/json"},
-    body:JSON.stringify({nome:pastaAtual, dados:pastas[pastaAtual].dados})
+    body:JSON.stringify({nome:pastaAtual, dados:pastas[pastaAtual].dados, usuario:user})
   }).then(res=>res.text()).then(console.log);
 });
 
